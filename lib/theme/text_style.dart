@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class BWTextStyle {
-  BWTextStyle._();
+class TDTextStyle {
+  TDTextStyle._();
 
   static TextStyle body({
     required BuildContext context,

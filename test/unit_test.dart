@@ -8,7 +8,7 @@ Future<void> main() async {
     });
 
     test('Padding', () {
-      expect(ConstValue.bodyVeritclaPadding, 20);
+      expect(ConstValue.offset, 20);
     });
   });
 }

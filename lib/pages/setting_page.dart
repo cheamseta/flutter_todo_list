@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_list/constant/const.dart';
-import 'package:flutter_todo_list/shared/components/container_widget.dart';
-import 'package:flutter_todo_list/shared/components/text_widget.dart';
+import 'package:flutter_todo_list/shared/components/containers/container_split.dart';
+import 'package:flutter_todo_list/shared/components/widgets/widget_text.dart';
 
 class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ContainerWidget(
+    return TDContainerSplit(
       title: "Setting",
       subtitle: "Configure application ",
-      body: SingleChildScrollView(
+      bodyLeftSide: SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: ConstValue.roundedRadius),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

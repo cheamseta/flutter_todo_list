@@ -53,9 +53,16 @@ class TDText extends StatelessWidget {
         textOverflow: textOverflow);
   }
 
-  static TDText header(String text,
-      {isBold = false, align = TextAlign.left, isCross = false, maxLine = 3}) {
-    final titleStyle = BWTextStyle.headline(isBold: isBold, isCross: isCross);
+  static TDText header(
+    String text, {
+    isBold = false,
+    align = TextAlign.left,
+    isCross = false,
+    maxLine = 3,
+    Color? color,
+  }) {
+    final titleStyle =
+        TDTextStyle.headline(isBold: isBold, isCross: isCross, color: color);
     return TDText(
       maxLine: maxLine,
       align: align,
@@ -112,7 +119,7 @@ class TDText extends StatelessWidget {
     int maxLine = 10,
   }) {
     final titleStyle =
-        BWTextStyle.caption(isBold: isBold, isCross: isCross, color: color);
+        TDTextStyle.caption(isBold: isBold, isCross: isCross, color: color);
     return TDText(
       maxLine: maxLine,
       align: align,
@@ -130,7 +137,7 @@ class TDText extends StatelessWidget {
     bool isCross = false,
   }) {
     final titleStyle =
-        BWTextStyle.tiny(isBold: isBold, isCross: isCross, color: color);
+        TDTextStyle.tiny(isBold: isBold, isCross: isCross, color: color);
     return TDText(
       maxLine: maxLine,
       align: align,
@@ -149,7 +156,7 @@ class TDText extends StatelessWidget {
         maxLines: maxLine,
         textAlign: align,
         style:
-            BWTextStyle.tinier(isBold: isBold, color: color, isCross: isCross));
+            TDTextStyle.tinier(isBold: isBold, color: color, isCross: isCross));
   }
 }
 
@@ -177,7 +184,7 @@ class _BWTextTitleWidget extends StatelessWidget {
     return TDText(
       maxLine: maxLine,
       align: align,
-      textStyle: BWTextStyle.title(
+      textStyle: TDTextStyle.title(
         isBold: isBold,
         isCross: isCross,
         color: color,
@@ -212,7 +219,7 @@ class _BWTextSubtitleWidget extends StatelessWidget {
     return TDText(
       maxLine: maxLine,
       align: align,
-      textStyle: BWTextStyle.subtitle(
+      textStyle: TDTextStyle.subtitle(
         isBold: isBold,
         isCross: isCross,
         color: color,
@@ -246,7 +253,7 @@ class _BWTextBodyWidget extends StatelessWidget {
     return TDText(
       maxLine: maxLine,
       align: align,
-      textStyle: BWTextStyle.body(
+      textStyle: TDTextStyle.body(
         isBold: isBold,
         isCross: isCross,
         color: color,

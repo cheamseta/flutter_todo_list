@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_list/constant/const.dart';
 import 'package:flutter_todo_list/controllers/start_page_controller.dart';
+import 'package:flutter_todo_list/models/model_todo_category.dart';
+import 'package:flutter_todo_list/pages/home_page.dart';
 import 'package:flutter_todo_list/pages/setting_page.dart';
-import 'package:flutter_todo_list/shared/components/side_tab_widget.dart';
+import 'package:flutter_todo_list/pages/todo_list/todo_list_page.dart';
+import 'package:flutter_todo_list/shared/components/tabs/tab_side_icon.dart';
+import 'package:flutter_todo_list/shared/components/tabs/tab_side_text.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class StartPage extends StatefulWidget {
@@ -18,39 +23,77 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<StartPageController>(
-        initState: (state) => ctrl.onViewDidLoad,
-        builder: (builder) =>
-            Scaffold(body: Row(children: [todoListTabCategory(), body()])));
+    return GetBuilder<StartPageController>(builder: (builder) => scaffold());
+  }
+
+  Widget scaffold() {
+    return Scaffold(
+      body: Row(children: [
+        todoListTabCategory(),
+        body(),
+      ]),
+    );
   }
 
   Widget body() {
-    return Flexible(child: SettingPage());
+    switch (ctrl.selectedTab) {
+      case 'home':
+        return Flexible(child: HomePage());
+      case 'setting':
+        return Flexible(child: SettingPage());
+      default:
+        return Flexible(
+            child: TodoListPage(
+          key: Key(ctrl.selectedTab),
+          todoID: ctrl.selectedTab,
+        ));
+    }
   }
 
   Widget todoListTabCategory() {
     List<Widget> list = [];
 
-    for (final tab in ctrl.tabList) {
-      list.add(Padding(
+    list.add(Padding(
         padding: const EdgeInsets.only(bottom: 5),
-        child: SideTabWidget(
-            tab: tab,
-            selectedId: ctrl.selectedTab,
-            onSelect: (select) => ctrl.onSelectedTab(tab)),
-      ));
+        child: TDTabSideIcon(
+          tabIcon: Icons.home,
+          selectedId: ctrl.selectedTab,
+          theId: ConstValue.homeTabKey,
+          alignment: Alignment.bottomCenter,
+          onSelect: (index) => ctrl.onSelectedTab(ConstValue.homeTabKey),
+        )));
+
+    for (final tab in ctrl.todoCategoriesPending) {
+      list.add(tabCell(tab));
     }
 
     return Container(
         width: 45,
-        color: Colors.grey,
+        color: Colors.grey.shade500,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(children: list),
-            const SizedBox()
-            // SideTabWidget(tab: ),
+            Expanded(
+                child: SingleChildScrollView(
+              child: Column(children: list),
+            )),
+            TDTabSideIcon(
+              tabIcon: Icons.settings,
+              selectedId: ctrl.selectedTab,
+              theId: ConstValue.settingTabKey,
+              alignment: Alignment.topCenter,
+              onSelect: (index) => ctrl.onSelectedTab(ConstValue.settingTabKey),
+            ),
           ],
         ));
+  }
+
+  Widget tabCell(ModelTodoCategory tab) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5),
+      child: TDTabSideText(
+          tab: tab,
+          selectedId: ctrl.selectedTab,
+          onSelect: (select) => ctrl.onSelectedTab(tab.id)),
+    );
   }
 }

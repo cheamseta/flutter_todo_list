@@ -1,40 +1,18 @@
+import 'package:flutter_todo_list/constant/const.dart';
+import 'package:flutter_todo_list/controllers/based_controller.dart';
 import 'package:get/get.dart';
 
-class StartPageController extends GetxController {
+class StartPageController extends BasedController {
   static StartPageController get ctrl => Get.put(StartPageController());
+  String selectedTab = ConstValue.homeTabKey;
 
-  String selectedTab = "";
-
-  List<Map> tabList = [
-    {
-      "id": "39383883",
-      "title": "Todo List",
-      "color": "00000",
-    },
-    {
-      "id": "343434",
-      "title": "Shopping",
-      "color": "00000",
-    },
-    {
-      "id": "575556",
-      "title": "Important",
-      "color": "00000",
-    }
-  ];
-
-  void onViewDidLoad() {
-    selectedTab = ctrl.tabList.first['id'];
+  void onReload() {
+    onInitData();
+    update();
   }
 
-  void onSelectedTab(Map tab) {
-    selectedTab = tab['id'];
+  void onSelectedTab(String id) {
+    selectedTab = id;
     ctrl.update();
-  }
-
-  @override
-  void onReady() {
-    onViewDidLoad();
-    super.onReady();
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppTheme with ChangeNotifier {
-  static bool _isDark = true;
+  static bool _isDark = false;
   static Color _color = Colors.deepPurple;
 
   ThemeMode currentTheme() {

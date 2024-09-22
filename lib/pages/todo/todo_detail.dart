@@ -4,6 +4,7 @@ import 'package:flutter_todo_list/controllers/todo_detail_controller.dart';
 import 'package:flutter_todo_list/models/model_subtask.dart';
 import 'package:flutter_todo_list/models/model_todo.dart';
 import 'package:flutter_todo_list/models/model_todo_category.dart';
+import 'package:flutter_todo_list/services/local_notification_service.dart';
 import 'package:flutter_todo_list/shared/components/cells/cell_subtask.dart';
 import 'package:flutter_todo_list/shared/components/cells/cell_text_container.dart';
 import 'package:flutter_todo_list/shared/components/dialogs/dialog_prompt.dart';
@@ -13,6 +14,8 @@ import 'package:flutter_todo_list/shared/components/widgets/widget_text.dart';
 import 'package:flutter_todo_list/shared/components/widgets/widget_textfield.dart';
 import 'package:flutter_todo_list/shared/helpers/helper_services.dart';
 import 'package:get/get.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 class TodoDetail extends StatelessWidget {
   final ModelTodo todo;
@@ -183,10 +186,12 @@ class TodoDetail extends StatelessWidget {
   Widget subheaderReminder() {
     List<Widget> list = [
       CellTextContainer(
-          title: 'Reminder',
+          title: todo.reminderTimestamp != 0
+              ? 'Reminder : ${HelperServices.convertToDateTimeByTimestamp(todo.reminderTimestamp, isOneLine: true)}'
+              : 'Reminder',
           padd: const EdgeInsets.only(right: 5, bottom: 5),
           icon: Icons.timelapse,
-          onTap: () {}),
+          onTap: () => onAddNotifyReminder()),
       const SizedBox(width: 5)
     ];
 
@@ -225,5 +230,29 @@ class TodoDetail extends StatelessWidget {
     list.add(const SizedBox(width: 5));
 
     return Wrap(children: list);
+  }
+
+  void onAddNotifyReminder() async {
+    DateTime? pickedDate = await showDatePicker(
+        initialEntryMode: DatePickerEntryMode.calendarOnly,
+        initialDate: DateTime.now(),
+        context: Get.context!,
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2050));
+
+    if (pickedDate == null) {
+      return;
+    }
+
+    final pikDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day);
+    await LocalNotificationService().onCancelSchedule(todo.reminderTimestamp);
+    todo.reminderTimestamp = HelperServices.getTimestamp(date: pikDate);
+    ctrl.onSave(todo);
+    ctrl.update();
+
+    tz.initializeTimeZones();
+    final scheduledDate = tz.TZDateTime.from(pikDate, tz.local);
+    await LocalNotificationService()
+        .onSchedultPushLocal(todo.reminderTimestamp, scheduledDate);
   }
 }

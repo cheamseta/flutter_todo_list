@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:intl/intl.dart' as dd;
 import 'package:flutter_todo_list/constant/const.dart';
+import 'package:intl/intl.dart';
 
 class HelperServices {
   static int helperGridCrossCountBySize(double maxWidth) {
@@ -16,6 +17,13 @@ class HelperServices {
       crossCount = 3;
     }
     return crossCount;
+  }
+
+  static String convertToDateTimeByTimestamp(int timeStamp,
+      {isOneLine = false}) {
+    var dateToTimeStamp = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
+    return DateFormat(isOneLine ? 'dd/MM/yyyy' : 'dd/MM/yyyy')
+        .format(dateToTimeStamp);
   }
 
   static String dateToday() {

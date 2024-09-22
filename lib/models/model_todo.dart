@@ -10,18 +10,19 @@ class ModelTodo {
   bool isPriority;
   List<ModelSubtask> subtasks;
   List<String> tags;
+  int reminderTimestamp;
 
-  ModelTodo({
-    required this.id,
-    required this.title,
-    required this.todoCategoryId,
-    required this.timestamp,
-    required this.subtasks,
-    required this.isPriority,
-    required this.tags,
-    this.isCompleted = false,
-    this.subtitle = '',
-  });
+  ModelTodo(
+      {required this.id,
+      required this.title,
+      required this.todoCategoryId,
+      required this.timestamp,
+      required this.subtasks,
+      required this.isPriority,
+      required this.tags,
+      this.isCompleted = false,
+      this.subtitle = '',
+      this.reminderTimestamp = 0});
 
   Map toMap() {
     List<Map> subtasksMap = subtasks.map((e) => e.toMap()).toList();
@@ -34,6 +35,7 @@ class ModelTodo {
       'todoCategoryId': todoCategoryId,
       'timestamp': timestamp,
       'tags': tags,
+      'reminderTimestamp': reminderTimestamp,
       'isPriority': isPriority,
       'subtasks': subtasksMap
     };
@@ -55,6 +57,7 @@ class ModelTodo {
       isCompleted: json['isCompleted'] ?? false,
       isPriority: json['isPriority'] ?? false,
       todoCategoryId: json['todoCategoryId'],
+      reminderTimestamp: json['reminderTimestamp'] ?? 0,
       tags: json['tags'] ?? [].cast<String>(),
       subtasks: subtasks,
       timestamp: int.tryParse(json['timestamp'].toString()) ?? 0,

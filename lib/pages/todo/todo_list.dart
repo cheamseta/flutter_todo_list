@@ -2,117 +2,101 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_list/constant/const.dart';
 import 'package:flutter_todo_list/controllers/home_page_controller.dart';
 import 'package:flutter_todo_list/controllers/start_page_controller.dart';
-import 'package:flutter_todo_list/controllers/todo_list_page_controller.dart';
+import 'package:flutter_todo_list/controllers/todo_list_controller.dart';
 import 'package:flutter_todo_list/models/model_todo.dart';
-import 'package:flutter_todo_list/shared/components/dialogs/dialog_todo_detail.dart';
-import 'package:flutter_todo_list/shared/components/containers/container_dialog.dart';
-import 'package:flutter_todo_list/shared/components/containers/container_split.dart';
-import 'package:flutter_todo_list/shared/components/widgets/widget_button.dart';
-import 'package:flutter_todo_list/shared/components/widgets/widget_dropdown.dart';
+import 'package:flutter_todo_list/models/model_todo_category.dart';
+import 'package:flutter_todo_list/pages/todo/todo_detail.dart';
 import 'package:flutter_todo_list/shared/components/cells/cell_todo.dart';
+import 'package:flutter_todo_list/shared/components/containers/container_dialog.dart';
+import 'package:flutter_todo_list/shared/components/widgets/widget_button.dart';
 import 'package:flutter_todo_list/shared/components/widgets/widget_empty.dart';
 import 'package:flutter_todo_list/shared/components/widgets/widget_text.dart';
 import 'package:flutter_todo_list/shared/components/widgets/widget_textfield.dart';
-import 'package:flutter_todo_list/shared/helpers/helper_services.dart';
 import 'package:get/get.dart';
 
-class TodoListPage extends StatelessWidget {
-  TodoListPageController ctrl = TodoListPageController.ctrl;
+class TodoList extends StatelessWidget {
+  TodoListController ctrl = TodoListController.ctrl;
   TextEditingController newTodoTxtCtrl = TextEditingController();
-  final String todoID;
 
-  TodoListPage({super.key, required this.todoID});
+  final VoidCallback onReload;
+  final Function(ModelTodo) onSelectTodo;
+  final ModelTodoCategory selectedTodoCate;
+
+  TodoList({
+    super.key,
+    required this.onReload,
+    required this.onSelectTodo,
+    required this.selectedTodoCate,
+  });
 
   void onViewDidLoad() {
-    ctrl.onGetTodoCategoryById(todoID);
-    ctrl.onGetTodoListByCategoryId();
+    ctrl.onGetTodoListByCategoryId(selectedTodoCate);
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<TodoListPageController>(
+    return GetBuilder<TodoListController>(
         initState: (state) => onViewDidLoad(),
         builder: (builder) {
-          return TDContainerSplit(
-            title: '${ctrl.selectedTodoCate.title} 😃',
-            actions: [sideOptions()],
-            subtitle: 'This is important, need to make sure done all',
-            bodyLeftSide: leftWidget(),
-            bodyRightSide: rightWidget(),
-            isSmallShowLeftSideOnly: true,
-          );
+          List<Widget> list = [];
+          list.add(graph());
+
+          if (ctrl.todoList.isEmpty) {
+            list.add(WidgetEmpty(
+              title: 'There is no todo list\nAdd One to start your day',
+            ));
+          }
+
+          for (final todo in ctrl.todoList) {
+            list.add(TDCellTodo(
+              todo: todo,
+              priorityLevel: 2,
+              selected: ctrl.selectToDo,
+              onCheck: () => ctrl.onCheckTodo(todo),
+              onTap: () => onDetail(todo, context),
+              onOptions: (option) {
+                Get.back();
+                switch (option) {
+                  case 'Detail':
+                    onDetail(todo, context);
+                    break;
+                  case 'Remove':
+                    ctrl.onRemoveTodo(todo, onComplete: () {
+                      ctrl.onGetTodoListByCategoryId(selectedTodoCate);
+                    });
+                    break;
+                  default:
+                }
+              },
+            ));
+          }
+
+          list.add(newTodo());
+          list.add(completeButton());
+
+          return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: ConstValue.offset),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: list,
+              ));
         });
   }
 
-  Widget sideOptions() {
-    return WidgetDropdown(
-      title: 'Options',
-      listString: const ['Remove'],
-      onTap: (option) {
-        Get.back();
-        switch (option) {
-          case 'Remove':
-            ctrl.onRemoveTodoCategory(ctrl.selectedTodoCate,
-                onComplete: () => onReloadApp());
-            break;
-          default:
-        }
-      },
-    );
-  }
-
-  Widget rightWidget() {
-    if (ctrl.selectToDo == null) {
-      return const SizedBox();
-    }
-
-    return DialogTodoDetail(
-        key: Key(ctrl.selectToDo!.id), todo: ctrl.selectToDo!);
-  }
-
-  Widget leftWidget() {
-    List<Widget> list = [];
-    list.add(graph());
-
-    if (ctrl.todoList.isEmpty) {
-      list.add(WidgetEmpty(
-          title: 'There is no todo list\nAdd One to start your day'));
-    }
-
-    for (final todo in ctrl.todoList) {
-      list.add(TDCellTodo(
-        todo: todo,
-        priorityLevel: 2,
-        selected: ctrl.selectToDo,
-        onCheck: () => ctrl.onCheckTodo(todo),
-        onTap: () {
-          ctrl.onSelectTodo(todo);
-          Get.dialog(TDContainerDialog(
+  void onDetail(ModelTodo todo, BuildContext context) {
+    if (MediaQuery.of(context).size.width > ConstValue.responsiveMax) {
+      ctrl.onSelectTodo(todo);
+    } else {
+      Get.dialog(
+          TDContainerDialog(
             title: '',
-            child: DialogTodoDetail(todo: todo),
-          ));
-        },
-        onOptions: (option) {
-          Get.back();
-          switch (option) {
-            case 'Remove':
-              ctrl.onRemoveTodo(todo);
-              break;
-            default:
-          }
-        },
-      ));
+            child: TodoDetail(
+              todo: todo,
+              selectedTodoCategory: selectedTodoCate,
+            ),
+          ),
+          useSafeArea: false);
     }
-
-    list.add(newTodo());
-    list.add(completeButton());
-
-    return SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: ConstValue.offset),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: list,
-        ));
   }
 
   Widget graph() {
@@ -150,6 +134,10 @@ class TodoListPage extends StatelessWidget {
   }
 
   Widget newTodo() {
+    if (selectedTodoCate.isCompleted) {
+      return const SizedBox();
+    }
+
     return Column(
       children: [
         Container(
@@ -165,21 +153,25 @@ class TodoListPage extends StatelessWidget {
               isMultiLine: true,
             )),
         const SizedBox(height: 10),
-        TDButton('Add', isFull: true, isBold: true, iconData: Icons.add,
-            onTap: () {
-          final todoForm = ModelTodo(
-              id: HelperServices.uidiTimestamp(),
-              title: newTodoTxtCtrl.text,
-              todoCategoryId: ctrl.selectedTodoCate!.id,
-              timestamp: HelperServices.getTimestamp());
-          ctrl.onAddTodo(todoForm);
-          newTodoTxtCtrl.text = '';
-        })
+        TDButton('Add',
+            isFull: true,
+            isBold: true,
+            iconData: Icons.add,
+            onTap: () => ctrl.onAddTodo(
+                text: newTodoTxtCtrl.text,
+                selectedTodoCate: selectedTodoCate,
+                onComplete: () {
+                  newTodoTxtCtrl.text = '';
+                }))
       ],
     );
   }
 
   Widget completeButton() {
+    if (selectedTodoCate.isCompleted) {
+      return const SizedBox();
+    }
+
     if (ctrl.progressCalculation.percentage != 1) {
       return const SizedBox();
     }
@@ -191,8 +183,10 @@ class TodoListPage extends StatelessWidget {
           isFull: true,
           isBold: true,
           iconData: Icons.check, onTap: () {
-        ctrl.onCompletedTodoCategory(ctrl.selectedTodoCate,
-            onComplete: () => onReloadApp());
+        ctrl.onCompletedTodoCategory(
+          selectedTodoCate,
+          onComplete: () => onReloadApp(),
+        );
       }),
     );
   }

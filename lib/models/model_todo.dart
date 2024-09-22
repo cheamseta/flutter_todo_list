@@ -1,3 +1,5 @@
+import 'package:flutter_todo_list/models/model_subtask.dart';
+
 class ModelTodo {
   String id;
   String title;
@@ -5,19 +7,25 @@ class ModelTodo {
   String subtitle;
   String todoCategoryId;
   bool isCompleted;
-  List<String>? subtasks;
+  bool isPriority;
+  List<ModelSubtask> subtasks;
+  List<String> tags;
 
   ModelTodo({
     required this.id,
     required this.title,
     required this.todoCategoryId,
     required this.timestamp,
+    required this.subtasks,
+    required this.isPriority,
+    required this.tags,
     this.isCompleted = false,
     this.subtitle = '',
-    this.subtasks,
   });
 
   Map toMap() {
+    List<Map> subtasksMap = subtasks.map((e) => e.toMap()).toList();
+
     return {
       'id': id,
       'title': title,
@@ -25,18 +33,30 @@ class ModelTodo {
       'isCompleted': isCompleted,
       'todoCategoryId': todoCategoryId,
       'timestamp': timestamp,
-      'subtasks': subtasks
+      'tags': tags,
+      'isPriority': isPriority,
+      'subtasks': subtasksMap
     };
   }
 
   factory ModelTodo.fromJson(Map<dynamic, dynamic> json) {
+    List<ModelSubtask> subtasks = [];
+
+    if (json['subtasks'] != null) {
+      subtasks = List.from(json['subtasks'])
+          .map((e) => ModelSubtask.fromJson(e))
+          .toList();
+    }
+
     return ModelTodo(
       id: json['id'],
       title: json['title'],
       subtitle: json['subtitle'],
       isCompleted: json['isCompleted'] ?? false,
+      isPriority: json['isPriority'] ?? false,
       todoCategoryId: json['todoCategoryId'],
-      subtasks: json['subtasks'] ?? [].cast<String>(),
+      tags: json['tags'] ?? [].cast<String>(),
+      subtasks: subtasks,
       timestamp: int.tryParse(json['timestamp'].toString()) ?? 0,
     );
   }

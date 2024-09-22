@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_list/constant/const.dart';
 import 'package:flutter_todo_list/controllers/start_page_controller.dart';
 import 'package:flutter_todo_list/models/model_todo_category.dart';
-import 'package:flutter_todo_list/pages/home_page.dart';
-import 'package:flutter_todo_list/pages/setting_page.dart';
-import 'package:flutter_todo_list/pages/todo_list/todo_list_page.dart';
+import 'package:flutter_todo_list/pages/home/home_page.dart';
+import 'package:flutter_todo_list/pages/setting/setting_page.dart';
+import 'package:flutter_todo_list/pages/todo/todo_page.dart';
 import 'package:flutter_todo_list/shared/components/tabs/tab_side_icon.dart';
 import 'package:flutter_todo_list/shared/components/tabs/tab_side_text.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -23,7 +23,9 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<StartPageController>(builder: (builder) => scaffold());
+    return GetBuilder<StartPageController>(
+      builder: (builder) => scaffold(),
+    );
   }
 
   Widget scaffold() {
@@ -43,7 +45,7 @@ class _StartPageState extends State<StartPage> {
         return Flexible(child: SettingPage());
       default:
         return Flexible(
-            child: TodoListPage(
+            child: TodoPage(
           key: Key(ctrl.selectedTab),
           todoID: ctrl.selectedTab,
         ));

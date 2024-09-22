@@ -5,21 +5,25 @@ class ModelTodoCategory {
   String id;
   String title;
   String color;
+  String emoji;
   int timestamp;
   bool isCompleted;
 
-  ModelTodoCategory(
-      {required this.id,
-      required this.title,
-      required this.color,
-      required this.timestamp,
-      required this.isCompleted});
+  ModelTodoCategory({
+    required this.id,
+    required this.title,
+    required this.color,
+    required this.emoji,
+    required this.timestamp,
+    required this.isCompleted,
+  });
 
   Map toMap() {
     return {
       'id': id,
       'title': title,
       'color': color,
+      'emoji': emoji,
       'timestamp': timestamp,
       'isCompleted': isCompleted
     };
@@ -30,6 +34,7 @@ class ModelTodoCategory {
       id: json['id'],
       title: json['title'],
       color: json['color'],
+      emoji: json['emoji'] ?? '🥰',
       isCompleted: json['isCompleted'] ?? false,
       timestamp: int.tryParse(json['timestamp'].toString()) ?? 0,
     );

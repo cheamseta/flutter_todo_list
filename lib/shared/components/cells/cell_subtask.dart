@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_list/models/model_subtask.dart';
 import 'package:flutter_todo_list/shared/components/widgets/widget_dropdown.dart';
 import 'package:flutter_todo_list/shared/components/widgets/widget_text.dart';
 
 class TDCellSubtask extends StatelessWidget {
-  final String title;
+  final ModelSubtask subtask;
   final Function() onCheck;
   final Function(String) onOptions;
 
-  const TDCellSubtask({
-    super.key,
-    required this.title,
-    required this.onOptions,
-    required this.onCheck,
-  });
+  const TDCellSubtask(
+      {super.key,
+      required this.subtask,
+      required this.onOptions,
+      required this.onCheck});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,14 @@ class TDCellSubtask extends StatelessWidget {
       child: ListTile(
         leading: InkWell(
             onTap: onCheck,
-            child: const Icon(Icons.check_box_outline_blank_rounded,
-                size: 40, color: Colors.grey)),
-        title: TDText.subtitle(title, isBold: true, maxLine: 2),
+            child: Icon(
+              subtask.isCompleted
+                  ? Icons.check_box_rounded
+                  : Icons.check_box_outline_blank_rounded,
+              size: 40,
+              color: subtask.isCompleted ? Colors.green.shade800 : Colors.grey,
+            )),
+        title: TDText.subtitle(subtask.title, isBold: true, maxLine: 2),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

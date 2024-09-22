@@ -11,4 +11,6 @@ class ConstValue {
 
   static const toDoCategoryBoxKey = 'toDoCategoryBoxKey';
   static const toDoBoxKey = 'ToDoBoxKey';
+
+  static const emojiList = '⚽️ ⚾️ 😅 😇 🥰 😛 😊 🥰';
 }

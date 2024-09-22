@@ -28,7 +28,7 @@ class TDCellTodoCategory extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TDText(
-                      text: '🏀',
+                      text: todoCategory.emoji,
                       textStyle:
                           const TextStyle(fontSize: 20, color: Colors.black)),
                   const SizedBox(height: 5),

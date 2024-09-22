@@ -51,12 +51,14 @@ class TDCellTodo extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.circle, size: 10, color: Colors.redAccent),
+            Icon(Icons.circle,
+                size: 10,
+                color: todo.isPriority ? Colors.redAccent : Colors.white),
             WidgetDropdown(
                 onTap: onOptions,
                 title: '',
                 iconData: Icons.more_vert_rounded,
-                listString: ['Detail', 'Remove'])
+                listString: const ['Detail', 'Priority' 'Remove'])
           ],
         ),
       ),

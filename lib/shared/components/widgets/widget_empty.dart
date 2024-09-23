@@ -5,7 +5,7 @@ import 'package:flutter_todo_list/shared/components/widgets/widget_text.dart';
 class WidgetEmpty extends StatelessWidget {
   final String title;
 
-  WidgetEmpty({super.key, required this.title});
+  const WidgetEmpty({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

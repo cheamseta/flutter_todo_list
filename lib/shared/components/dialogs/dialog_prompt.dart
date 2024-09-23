@@ -10,7 +10,7 @@ class DialogPrompt extends StatelessWidget {
 
   TextEditingController ctrl = TextEditingController();
 
-  DialogPrompt({required this.title, required this.onCallback});
+  DialogPrompt({super.key, required this.title, required this.onCallback});
 
   @override
   Widget build(BuildContext context) {

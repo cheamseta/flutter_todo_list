@@ -42,7 +42,7 @@ class TodoList extends StatelessWidget {
           list.add(graph());
 
           if (ctrl.todoList.isEmpty) {
-            list.add(WidgetEmpty(
+            list.add(const WidgetEmpty(
               title: 'There is no todo list\nAdd One to start your day',
             ));
           }

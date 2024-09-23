@@ -6,7 +6,8 @@ class CellList extends StatelessWidget {
   final String title;
   final Widget trailing;
 
-  CellList({
+  const CellList({
+    super.key,
     required this.title,
     required this.trailing,
   });

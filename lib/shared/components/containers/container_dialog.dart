@@ -7,7 +7,7 @@ class TDContainerDialog extends StatelessWidget {
   final String title;
   final Widget child;
 
-  TDContainerDialog({
+  const TDContainerDialog({
     super.key,
     required this.title,
     required this.child,

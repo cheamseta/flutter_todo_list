@@ -25,7 +25,7 @@ class TDTabSideText extends StatelessWidget {
           decoration: BoxDecoration(
               color: selectedId == tab.id
                   ? Theme.of(context).canvasColor
-                  : Color(int.parse("0xFF${tab.color}")),
+                  : Color(int.parse('0xFF${tab.color}')),
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(ConstValue.roundedRadius),
                   topLeft: Radius.circular(ConstValue.roundedRadius))),

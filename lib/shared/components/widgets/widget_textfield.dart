@@ -36,7 +36,7 @@ class TDTextfield extends StatelessWidget {
       this.suffixAction,
       this.textInput,
       this.suffix,
-      this.placeholder = "...",
+      this.placeholder = '...',
       this.onSubmit,
       this.onChange,
       this.textLength,
@@ -56,7 +56,7 @@ class TDTextfield extends StatelessWidget {
             ? Row(
                 children: [
                   TDText.subtitle(title),
-                  TDText.subtitle(" *", color: Colors.red)
+                  TDText.subtitle(' *', color: Colors.red)
                 ],
               )
             : TDText.subtitle(title),
